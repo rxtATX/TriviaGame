@@ -1,0 +1,7 @@
+body {
+	background-color: #237DC1;
+}
+#game {
+	background-image: url("../images/background.jpg");
+	background-repeat: no-repeat;
+}
