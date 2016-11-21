@@ -1,14 +1,8 @@
 $(document).ready(function () {
-    //Initialize Game
-    resetQuiz();
-    hideScore();
-    // Display First Question
-    displayCurrentQuestion();
-    
-    //Initialize Click Events
-    $(".nextButton").off("click").on("click", clickNextHandler);
+    gameInit();
 });
     //Global variables
+var isRunning;
 var currentQuestion;
 var correctAnswers;
 var isQuizOver;
@@ -18,35 +12,35 @@ var questions = [{
     choices: ["A tanner", "A cobler", "A farrier", "A chandler"],
     correctAnswer: 2
 }, {
-    question: "What does the word opus mean in Latin?",
+    question: "What does the word \"opus\" mean in Latin?",
     choices: ["Masterpiece", "Opera", "Work", "Overture"],
     correctAnswer: 0
 }, {
-    question: "People get together for a tete-a-tete. What is the literal meaning in its original french?",
+    question: "People get together for a \"tete-a-tete\". What is the literal meaning in its original french?",
     choices: ["Head to head", "Man to man", "One on one", "All together"],
     correctAnswer: 0
 }, {
-    question: "The word 'salary' originated with _______.",
-    choices: ["An Arabic word meaning 'daily bread'", "A French word meaning 'compensation'", "A German word meaning 'what is due'", "A Latin word meaning 'salt money'"],
+    question: "The word \"salary\" originated with _______.",
+    choices: ["An Arabic word meaning \"daily bread\"", "A French word meaning \"compensation\"", "A German word meaning \"what is due\"", "A Latin word meaning \"salt money\""],
     correctAnswer: 3
 }, {
-    question: "What is the literal meaning for the German word schadenfreude?",
+    question: "What is the literal meaning for the German word \"schadenfreude\"?",
     choices: ["Harm joy", "Shadow friends", "Shady joys", "Shameful joy"],
     correctAnswer: 0
 }, {
-    question: "When you order a cappuccino in Italy, what are you literally asking for?",
+    question: "When you order a \"cappuccino\" in Italy, what are you literally asking for?",
     choices: ["Coffee drink", "White coffee", "Small cap", "Extra foam"],
     correctAnswer: 2
 }, {
-    question: "What language did the word bicker come from?",
+    question: "What language did the word \"bicker\" come from?",
     choices: ["Latin", "Dutch", "French", "Arabic"],
     correctAnswer: 1
 }, {
-    question: "Booze comes from the liquor store. What language did the word originally come from?",
+    question: "\"Booze\" comes from the liquor store. What language did the word originally come from?",
     choices: ["French", "Greek", "Dutch", "Latin"],
     correctAnswer: 2
 }, {
-    question: "A cipher is a puzzle or encoded message in English, but what does the word mean in its original Arabic?",
+    question: "A \"cipher\" is a puzzle or encoded message in English, but what does the word mean in its original Arabic?",
     choices: ["Zero", "Code", "Illustration", "Puzzle"],
     correctAnswer: 0
 }, {
@@ -55,16 +49,29 @@ var questions = [{
     correctAnswer: 2
 }
 ];
-
+    //Start game parameters
+function gameInit() {
+    //Initialize Game
+    resetQuiz();
+    hideScore();
+    // Display First Question
+    displayCurrentQuestion();
+    //Initialize Click Events
+    $(".nextButton").off("click").on("click", clickNextHandler);
+}
     //Timer function ticks down each second with display.
 function timeDown() {
     $("#timerDisplay").html("You have " + timeLeft + " seconds left to answer this question.");
     timeLeft--;
     setTimeout(timeDown, 1000);
-        if (timeLeft == 0) {
-            alert("Time is up!");
-            resetQuiz();
+        if (timeLeft === 0) {
+            isQuizOver = true;
+            $(".question").html("You ran out of time!");
+            $("#timerDisplay").hide();
+            $(document).find(".nextButton").text("Play Again?");
+            // gameInit();
         }
+    isRunning = true;
 } 
     //Next button will trigger next question to display
 function clickNextHandler() {
@@ -79,15 +86,15 @@ function clickNextHandler() {
             displayCurrentQuestion();
         } else {
             displayScore();
+            $("#timerDisplay").hide();
             // Change the text in the next button to ask if user wants to play again
             $(document).find(".nextButton").text("Play Again?");
             isQuizOver = true;
         }
     
     } else { // quiz is over and clicked the next button (which now displays 'Play Again?')
-        isQuizOver = false;
         $(document).find(".nextButton").text("Next Question");
-        resetQuiz();
+        gameInit();
         displayCurrentQuestion();
         hideScore();
     }
@@ -95,7 +102,7 @@ function clickNextHandler() {
 
 // This displays the current question and the choices
 function displayCurrentQuestion() {
-
+    timeLeft = 20;
     var question = questions[currentQuestion].question;
     var questionClass = $(document).find(".questionBox > .question");
     var choiceList = $(document).find(".questionBox > .choiceList");
@@ -112,22 +119,23 @@ function displayCurrentQuestion() {
         $('<li><input type="radio" value=' + i + ' name="radiosOptions" />' + choice + '</li>').appendTo(choiceList);
     }
     //sets time and starts countdown
-    timeLeft = 20;
-    clearTimeout(timeDown);
-    timeDown();
+    if (!isRunning) {
+        timeDown();
+    }
 }
     //reinitialize game
 function resetQuiz() {
     currentQuestion = 0;
     correctAnswers = 0;
     timeLeft = 20;
+    $("#timerDisplay").show();
     isQuizOver = false;
     hideScore();
 }
     //Show total correct at the end of questions list
 function displayScore() {
-    $(document).find(".quizContainer > .result").text("You got " + correctAnswers + " answers right out of " + questions.length + " questions!");
-    $(document).find(".quizContainer > .result").show();
+    $(document).find(".questionBox > .result").text("You got " + correctAnswers + " answers right out of " + questions.length + " questions!");
+    $(document).find(".questionBox > .result").show();
 }
 
 function hideScore() {

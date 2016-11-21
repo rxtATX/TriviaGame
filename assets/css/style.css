@@ -16,6 +16,7 @@ body {
 }
 .quizContainer {
 	background-color: #D6BA73;
+	margin-top: 15%;
 }
 .questionBox {
 	position: relative;
