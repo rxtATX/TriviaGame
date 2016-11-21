@@ -1,6 +1,6 @@
 # TriviaGame
-I am starting the basic assignment for the trivia game, and depending on my success with it, I will add a timer later.
+This is a word origins trivia game. 
 
-The game will work with both multiple choice as well as true/false questions. 
+You will have 20 seconds to answer each question, or time will run out and the game will ask if you would like to reload.
 
-The game will be timed, try to get as many correct answers as possible before the time runs out!
+
