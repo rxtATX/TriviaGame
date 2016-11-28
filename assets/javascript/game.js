@@ -65,11 +65,13 @@ function timeDown() {
     timeLeft--;
     setTimeout(timeDown, 1000);
         if (timeLeft === 0) {
-            isQuizOver = true;
-            $(".question").html("You ran out of time!");
-            $("#timerDisplay").hide();
-            $(document).find(".nextButton").text("Play Again?");
-            // gameInit();
+            currentQuestion++;
+            displayCurrentQuestion();
+        //     isQuizOver = true;
+        //     $(".question").html("You ran out of time!");
+        //     $("#timerDisplay").hide();
+        //     $(document).find(".nextButton").text("Play Again?");
+        //     // gameInit();
         }
     isRunning = true;
 } 
